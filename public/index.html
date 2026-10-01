@@ -1,0 +1,170 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager v2</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; background: #eef2f7; padding: 20px; }
+        .container { max-width: 750px; margin: 0 auto; }
+        header { background: #1a6b3c; color: white; padding: 16px 20px; border-radius: 8px 8px 0 0; display: flex; align-items: center; gap: 10px; }
+        header h1 { font-size: 1.3rem; flex: 1; }
+        .version-badge { background: #f39c12; color: white; font-size: 0.75rem; padding: 2px 8px; border-radius: 99px; font-weight: bold; }
+        .card { background: white; padding: 20px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .stats-row { display: flex; gap: 10px; margin-bottom: 16px; }
+        .stat-box { flex: 1; text-align: center; background: #f8f9fa; border-radius: 6px; padding: 10px; }
+        .stat-num { font-size: 1.5rem; font-weight: bold; color: #1a6b3c; }
+        .stat-label { font-size: 0.75rem; color: #666; }
+        .form-row { display: flex; gap: 8px; margin-bottom: 10px; }
+        input[type="text"] { flex: 1; padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; }
+        select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; }
+        button { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9rem; font-weight: 500; }
+        .btn-add { background: #1a6b3c; color: white; }
+        .btn-search { background: #5a6678; color: white; }
+        .btn-delete { background: #e74c3c; color: white; font-size: 0.8rem; padding: 4px 10px; }
+        .filter-row { display: flex; gap: 6px; margin-bottom: 12px; }
+        .filter-btn { padding: 4px 12px; border: 1px solid #ddd; border-radius: 99px; background: white; font-size: 0.8rem; cursor: pointer; }
+        .filter-btn.active { background: #1a6b3c; color: white; border-color: #1a6b3c; }
+        hr { border: none; border-top: 1px solid #eee; margin: 14px 0; }
+        .task-list { list-style: none; }
+        .task-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+        .task-item:last-child { border-bottom: none; }
+        .task-title { flex: 1; font-size: 0.95rem; }
+        .task-title.done { text-decoration: line-through; color: #aaa; }
+        .badge { font-size: 0.7rem; padding: 2px 7px; border-radius: 99px; font-weight: bold; }
+        .badge-alta { background: #fdecea; color: #e74c3c; }
+        .badge-media { background: #fef9e7; color: #f39c12; }
+        .badge-baja { background: #eafaf1; color: #27ae60; }
+        #searchResults { margin-top: 10px; padding: 10px; background: #f0f7f3; border-left: 3px solid #1a6b3c; border-radius: 4px; font-size: 0.85rem; display: none; }
+        .empty { text-align: center; color: #bbb; padding: 20px 0; font-size: 0.9rem; }
+        .error-msg { color: #e74c3c; font-size: 0.85rem; margin-top: 4px; display: none; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <span>📋</span>
+        <h1>Task Manager</h1>
+        <span class="version-badge">v2.0</span>
+    </header>
+    <div class="card">
+        <!-- Stats -->
+        <div class="stats-row" id="statsRow">
+            <div class="stat-box"><div class="stat-num" id="statTotal">-</div><div class="stat-label">Total</div></div>
+            <div class="stat-box"><div class="stat-num" id="statPend">-</div><div class="stat-label">Pendientes</div></div>
+            <div class="stat-box"><div class="stat-num" id="statDone">-</div><div class="stat-label">Completadas</div></div>
+        </div>
+
+        <!-- Agregar tarea -->
+        <div class="form-row">
+            <input type="text" id="newTitle" placeholder="Nueva tarea..." />
+            <select id="newPriority">
+                <option value="alta">Alta</option>
+                <option value="media" selected>Media</option>
+                <option value="baja">Baja</option>
+            </select>
+            <button class="btn-add" onclick="addTask()">Agregar</button>
+        </div>
+        <div class="error-msg" id="errorMsg">El título no puede estar vacío.</div>
+
+        <!-- Buscar -->
+        <div class="form-row">
+            <input type="text" id="searchInput" placeholder="Buscar tarea..." />
+            <button class="btn-search" onclick="searchTasks()">Buscar</button>
+        </div>
+        <div id="searchResults"></div>
+
+        <hr>
+
+        <!-- Filtros -->
+        <div class="filter-row">
+            <button class="filter-btn active" onclick="filterTasks(null, this)">Todas</button>
+            <button class="filter-btn" onclick="filterTasks('alta', this)">🔴 Alta</button>
+            <button class="filter-btn" onclick="filterTasks('media', this)">🟡 Media</button>
+            <button class="filter-btn" onclick="filterTasks('baja', this)">🟢 Baja</button>
+        </div>
+
+        <!-- Lista de tareas -->
+        <ul class="task-list" id="taskList">
+            <li class="empty">Cargando...</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    let currentFilter = null;
+
+    async function loadStats() {
+        const res = await fetch("/api/stats");
+        const s = await res.json();
+        document.getElementById("statTotal").textContent = s.total;
+        document.getElementById("statPend").textContent = s.pendientes;
+        document.getElementById("statDone").textContent = s.completadas;
+    }
+
+    async function loadTasks(priority) {
+        const url = priority ? "/api/tasks?priority=" + priority : "/api/tasks";
+        const res = await fetch(url);
+        const tasks = await res.json();
+        renderTasks(tasks);
+    }
+
+    function renderTasks(tasks) {
+        const list = document.getElementById("taskList");
+        if (!tasks.length) { list.innerHTML = '<li class="empty">No hay tareas.</li>'; return; }
+        list.innerHTML = tasks.map(t => `
+            <li class="task-item">
+                <input type="checkbox" ${t.done ? "checked" : ""} onchange="toggleTask(${t.id}, this.checked)">
+                <span class="task-title ${t.done ? "done" : ""}">${t.title}</span>
+                <span class="badge badge-${t.priority}">${t.priority}</span>
+                <button class="btn-delete" onclick="deleteTask(${t.id})">Eliminar</button>
+            </li>`).join("");
+    }
+
+    async function addTask() {
+        const title = document.getElementById("newTitle").value.trim();
+        const priority = document.getElementById("newPriority").value;
+        const errorEl = document.getElementById("errorMsg");
+        if (!title) { errorEl.style.display = "block"; return; }
+        errorEl.style.display = "none";
+        await fetch("/api/tasks", { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({ title, priority }) });
+        document.getElementById("newTitle").value = "";
+        loadTasks(currentFilter);
+        loadStats();
+    }
+
+    async function deleteTask(id) {
+        await fetch("/api/tasks/" + id, { method: "DELETE" });
+        loadTasks(currentFilter);
+        loadStats();
+    }
+
+    async function toggleTask(id, done) {
+        await fetch("/api/tasks/" + id, { method: "PUT", headers: {"Content-Type":"application/json"}, body: JSON.stringify({ done }) });
+        loadTasks(currentFilter);
+        loadStats();
+    }
+
+    async function searchTasks() {
+        const q = document.getElementById("searchInput").value;
+        const div = document.getElementById("searchResults");
+        div.style.display = "block";
+        div.innerHTML = "Buscando...";
+        const res = await fetch("/api/tasks/search?q=" + encodeURIComponent(q));
+        const html = await res.text();
+        div.innerHTML = html;
+    }
+
+    function filterTasks(priority, btn) {
+        currentFilter = priority;
+        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        loadTasks(priority);
+    }
+
+    loadTasks();
+    loadStats();
+</script>
+</body>
+</html>
