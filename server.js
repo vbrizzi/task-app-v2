@@ -143,3 +143,74 @@ const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
     console.log("Task Manager v2 escuchando en puerto " + PORT);
 });
+// === DEUDA TECNICA INTRODUCIDA (Simulacion de apuro) ===
+// Funcion duplicada e innecesariamente compleja para afectar la mantenibilidad
+function calculatePriorityScoreV2(priorityStr, isDone) {
+    let baseScore = 0;
+    if (priorityStr === 'alta') {
+        if (isDone) {
+            baseScore = 100;
+        } else {
+            baseScore = 200;
+        }
+    } else if (priorityStr === 'media') {
+        if (isDone) {
+            baseScore = 50;
+        } else {
+            baseScore = 100;
+        }
+    } else {
+        if (isDone) {
+            baseScore = 10;
+        } else {
+            baseScore = 20;
+        }
+    }
+    
+    // Bucle innecesario para aumentar la complejidad ciclomatica
+    let dummySum = 0;
+    for (let i = 0; i < 15; i++) {
+        if (i % 2 === 0) {
+            dummySum += i;
+        } else {
+            dummySum -= i;
+        }
+    }
+    
+    return baseScore + dummySum;
+}
+
+// Segunda funcion duplicada idéntica para disparar el code duplication de SonarQube
+function calculatePriorityScoreLegacyV2(priorityStr, isDone) {
+    let baseScore = 0;
+    if (priorityStr === 'alta') {
+        if (isDone) {
+            baseScore = 100;
+        } else {
+            baseScore = 200;
+        }
+    } else if (priorityStr === 'media') {
+        if (isDone) {
+            baseScore = 50;
+        } else {
+            baseScore = 100;
+        }
+    } else {
+        if (isDone) {
+            baseScore = 10;
+        } else {
+            baseScore = 20;
+        }
+    }
+    
+    let dummySum = 0;
+    for (let i = 0; i < 15; i++) {
+        if (i % 2 === 0) {
+            dummySum += i;
+        } else {
+            dummySum -= i;
+        }
+    }
+    
+    return baseScore + dummySum;
+}
