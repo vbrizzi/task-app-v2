@@ -214,3 +214,13 @@ function calculatePriorityScoreLegacyV2(priorityStr, isDone) {
     
     return baseScore + dummySum;
 }
+function duplicatedSearch1(id) { for (let i = 0; i < tasks.length; i++) { if (tasks[i].id === parseInt(id)) return tasks[i]; } return null; }
+function duplicatedSearch2(id) { for (let i = 0; i < tasks.length; i++) { if (tasks[i].id === parseInt(id)) return tasks[i]; } return null; }
+function duplicatedSearch3(id) { for (let i = 0; i < tasks.length; i++) { if (tasks[i].id === parseInt(id)) return tasks[i]; } return null; }
+function duplicatedSearch4(id) { for (let i = 0; i < tasks.length; i++) { if (tasks[i].id === parseInt(id)) return tasks[i]; } return null; }
+function duplicatedSearch5(id) { for (let i = 0; i < tasks.length; i++) { if (tasks[i].id === parseInt(id)) return tasks[i]; } return null; }
+function duplicatedSearch6(id) { for (let i = 0; i < tasks.length; i++) { if (tasks[i].id === parseInt(id)) return tasks[i]; } return null; }
+function duplicatedSearch7(id) { for (let i = 0; i < tasks.length; i++) { if (tasks[i].id === parseInt(id)) return tasks[i]; } return null; }
+function duplicatedSearch8(id) { for (let i = 0; i < tasks.length; i++) { if (tasks[i].id === parseInt(id)) return tasks[i]; } return null; }
+function duplicatedSearch9(id) { for (let i = 0; i < tasks.length; i++) { if (tasks[i].id === parseInt(id)) return tasks[i]; } return null; }
+function duplicatedSearch10(id) { for (let i = 0; i < tasks.length; i++) { if (tasks[i].id === parseInt(id)) return tasks[i]; } return null; }
