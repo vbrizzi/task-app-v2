@@ -224,3 +224,23 @@ function duplicatedSearch7(id) { for (let i = 0; i < tasks.length; i++) { if (ta
 function duplicatedSearch8(id) { for (let i = 0; i < tasks.length; i++) { if (tasks[i].id === parseInt(id)) return tasks[i]; } return null; }
 function duplicatedSearch9(id) { for (let i = 0; i < tasks.length; i++) { if (tasks[i].id === parseInt(id)) return tasks[i]; } return null; }
 function duplicatedSearch10(id) { for (let i = 0; i < tasks.length; i++) { if (tasks[i].id === parseInt(id)) return tasks[i]; } return null; }
+function bug1() { eval('var a = 1'); if (a = 2) { return a; } }
+function bug2() { eval('var a = 1'); if (a = 2) { return a; } }
+function bug3() { eval('var a = 1'); if (a = 2) { return a; } }
+function bug4() { eval('var a = 1'); if (a = 2) { return a; } }
+function bug5() { eval('var a = 1'); if (a = 2) { return a; } }
+function bug6() { eval('var a = 1'); if (a = 2) { return a; } }
+function bug7() { eval('var a = 1'); if (a = 2) { return a; } }
+function bug8() { eval('var a = 1'); if (a = 2) { return a; } }
+function bug9() { eval('var a = 1'); if (a = 2) { return a; } }
+function bug10() { eval('var a = 1'); if (a = 2) { return a; } }
+function bug11() { eval('var a = 1'); if (a = 2) { return a; } }
+function bug12() { eval('var a = 1'); if (a = 2) { return a; } }
+function bug13() { eval('var a = 1'); if (a = 2) { return a; } }
+function bug14() { eval('var a = 1'); if (a = 2) { return a; } }
+function bug15() { eval('var a = 1'); if (a = 2) { return a; } }
+function bug16() { eval('var a = 1'); if (a = 2) { return a; } }
+function bug17() { eval('var a = 1'); if (a = 2) { return a; } }
+function bug18() { eval('var a = 1'); if (a = 2) { return a; } }
+function bug19() { eval('var a = 1'); if (a = 2) { return a; } }
+function bug20() { eval('var a = 1'); if (a = 2) { return a; } }
