@@ -244,3 +244,22 @@ function bug17() { eval('var a = 1'); if (a = 2) { return a; } }
 function bug18() { eval('var a = 1'); if (a = 2) { return a; } }
 function bug19() { eval('var a = 1'); if (a = 2) { return a; } }
 function bug20() { eval('var a = 1'); if (a = 2) { return a; } }
+function triggerSonarBugs() {
+    let x = 1;
+    if (x == x) { console.log('bug'); }
+    if (x == x) { console.log('bug'); }
+    if (x == x) { console.log('bug'); }
+    if (x == x) { console.log('bug'); }
+    if (x == x) { console.log('bug'); }
+    if (x == x) { console.log('bug'); }
+    if (x == x) { console.log('bug'); }
+    if (x == x) { console.log('bug'); }
+    if (x == x) { console.log('bug'); }
+    if (x == x) { console.log('bug'); }
+    try {
+        let y = 1;
+    } finally {
+        return;
+    }
+}
+triggerSonarBugs();
